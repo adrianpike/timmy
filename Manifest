@@ -1,0 +1,12 @@
+CHANGELOG
+LICENSE
+README.rdoc
+Rakefile
+example/example.conf.erb
+example/example.rb
+lib/timmy.rb
+lib/timmy/role.rb
+lib/timmy/server.rb
+lib/timmy/task.rb
+test/timmy_test.rb
+Manifest
