@@ -10,9 +10,6 @@ It's being built off of the following tenets:
 * I use *nix for my servers.
 * I don't want versions of software to change or update until I ask them to.
 * I shouldn't be tied to any distro, it should just work on whatever I've got the right knowhow for.
-* I should be able to run:
-	* Commands
-	* Simple pre-rolled sets of commands to do common tasks.
 * I should be able to easily move files to and from my servers.
 * I should be able to easily use EC2.
 * I should be able to have something up and running within 30 seconds.
@@ -23,6 +20,22 @@ If you don't agree with any of these, that's fine - there's plenty of other tool
 So, what does Timmy do? You feed Timmy beautiful definitions of server roles, such as "web","database", or "tomfoolery", which you write in clever Ruby, mixing in clever shell commands wherever you feel smarter than Timmy (which, let's face it, is *gonna* happen). Timmy takes these definitions, and then limps them over to your server(s), where he runs them. If he finds any serious errors, he'll stop, but if he can keep on plowing through he will. What a good little guy!
 
 Check out the 'example' directory to see an example architecture.
+
+== Quickstart yo!
+	gem install timmy
+	## example.rb
+	Timmy.role :database do
+		package 'mysql-server'
+		upload 'example.conf.erb', :remote => 'example.conf', :erb => true
+		command '/etc/init.d/mysql reload'
+		command 'halt'
+	end
+
+	Timmy.server 'awesome.adrianpike.com' do
+		user 'apps'
+		arch :centos
+		role :database
+	end
 
 === What you need
 * Knowledge of how to set up your server(s) the way you want. If you want to just preroll a bunch of packages together, this isn't for you. Sorry.
