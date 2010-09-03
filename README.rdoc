@@ -1,20 +1,22 @@
 (http://gregham.blogspot.com/2008/12/tiny-tim.html)
 
+= Timmy
+
 Timmy is friendly opinionated software(tm) for specifying and deploying a server architecture.
 
 It's being built off of the following tenets:
- * Building from source is good.
- * I shouldn't need any management server(s) to be a point of failure for bringing up/down/managing servers.
- * I use *nix for my servers.
- * I don't want versions of software to change or update until I ask them to.
- * I shouldn't be tied to any distro, it should just work on whatever I've got the right knowhow for.
- * I should be able to run:
+* Building from source is good.
+* I shouldn't need any management server(s) to be a point of failure for bringing up/down/managing servers.
+* I use *nix for my servers.
+* I don't want versions of software to change or update until I ask them to.
+* I shouldn't be tied to any distro, it should just work on whatever I've got the right knowhow for.
+* I should be able to run:
 	* Commands
 	* Simple pre-rolled sets of commands to do common tasks.
- * I should be able to easily move files to and from my servers.
- * I should be able to easily use EC2.
- * I should be able to have something up and running within 30 seconds.
- * I should not be confused by the documentation - the tools should be self-documenting with a README and a quickstart.
+* I should be able to easily move files to and from my servers.
+* I should be able to easily use EC2.
+* I should be able to have something up and running within 30 seconds.
+* I should not be confused by the documentation - the tools should be self-documenting with a README and a quickstart.
 
 If you don't agree with any of these, that's fine - there's plenty of other tools out there that are really cool and might fit to your standards better. Chef, Puppet, etc.
 
@@ -22,24 +24,24 @@ So, what does Timmy do? You feed Timmy beautiful definitions of server roles, su
 
 Check out the 'example' directory to see an example architecture.
 
-=== What you need ===
- - Knowledge of how to set up your server(s) the way you want. If you want to just preroll a bunch of packages together, this isn't for you. Sorry.
- - Key-based SSH access to your servers.
- - sudoability on your servers (if you need to be root, of course.)
+=== What you need
+* Knowledge of how to set up your server(s) the way you want. If you want to just preroll a bunch of packages together, this isn't for you. Sorry.
+* Key-based SSH access to your servers.
+* sudoability on your servers (if you need to be root, of course.)
 
-=== What's Here ===
-- Uploads, executions, package installation with yum
+=== What's Here
+* Uploads, executions, package installation with yum
 
-=== What's On the List ===
-- Any sort of test coverage.
-- Failure state handling.
-- Version locking on packages.
-- Concurrent connections.
-- Support of architectures other than CentOS.
-- A better context exposed to ERB config files.
+=== What's On the List
+* Any sort of test coverage.
+* Failure state handling.
+* Version locking on packages.
+* Concurrent connections.
+* Support of architectures other than CentOS.
+* A better context exposed to ERB config files.
 
-=== What You Can Do ===
-- Use it and let me know what doesn't work!
-- Fork it, and tweak it to your own nefarious purposes!
+=== What You Can Do
+* Use it and let me know what doesn't work!
+* Fork it, and tweak it to your own nefarious purposes!
 
 Copyright (c) 2010 Adrian Pike, released under the MIT license
