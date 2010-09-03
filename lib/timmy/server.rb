@@ -1,7 +1,7 @@
 module Timmy
 
 	class Server
-		attr_accessor :exec_stack
+		attr_accessor :exec_stack, :host, :user
 		def initialize(n)
 			@host = n
 			@exec_stack = []
@@ -20,16 +20,23 @@ module Timmy
 		def compile!
 			# build the execution stack based upon our roles and the kind of server we are
 			# this is mostly vestigal
+			if Timmy::roles[:global] then
+				@exec_stack += Timmy::roles[:global].exec_stack
+			end
+			
 			@roles.each {|r|
-				role = Timmy::roles[r]
-				role.exec_stack.each {|p|
+				Timmy::roles[r].exec_stack.each {|p|
 					@exec_stack << p
 				}
 			}
-		end		
+		end
 	
 		def connection
-			@connection ||= Net::SSH.start(@host, @user)
+			begin
+				@connection ||= Net::SSH.start(@host, @user)
+			rescue SocketError
+				raise HostUnavailable, @host
+			end
 		end
 
 		# MEGA REFACTOR THIS, SINCE IT'S JUST YANKED FROM NET::SSH

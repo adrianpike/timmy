@@ -6,6 +6,7 @@ require 'net/scp'
 require File.dirname(__FILE__) + '/timmy/task'
 require File.dirname(__FILE__) + '/timmy/role'
 require File.dirname(__FILE__) + '/timmy/server'
+require File.dirname(__FILE__) + '/timmy/timmish'
 
 module Timmy
 	VERSION = '0.0.1'
@@ -13,6 +14,7 @@ module Timmy
 	
 	class UnsupportedArchitecture < Exception; end
 	class Panic < Exception; end
+	class HostUnavailable < Exception; end
 	
 	mattr_accessor :roles, :servers
 
@@ -49,21 +51,25 @@ module Timmy
 		self.servers.each {|n,s|
 			printf "[#{n}] ----- \n"
 			s.compile!
-			s.exec_stack.each {|exec|
-				printf exec.to_s + " : "
-				$stdout.flush
-				begin
-					if dry_run
-						printf "[DRY RUN]"
-					else
-						result = exec.execute(s)
-						printf result.status
+			begin
+				s.exec_stack.each {|exec|
+					printf exec.to_s + " : "
+					$stdout.flush
+					begin
+						if dry_run
+							printf "[DRY RUN]"
+						else
+							result = exec.execute(s)
+							printf result.status
+						end
+					rescue Panic
+						printf "[FAILED]"
 					end
-				rescue Panic
-					printf "[FAILED]"
-				end
-				printf "\n"
-			}
+					printf "\n"
+				}
+			rescue HostUnavailable
+				printf 'Host unavailable.' + "\n"
+			end
 		}
 	end
 

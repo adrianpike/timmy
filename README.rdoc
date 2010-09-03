@@ -24,7 +24,7 @@ Check out the 'example' directory to see an example architecture.
 == Quickstart yo!
 	gem install timmy
 
-	## example.rb
+==== example.rb
 	Timmy.role :database do
 		package 'mysql-server'
 		upload 'example.conf.erb', :remote => 'example.conf', :erb => true

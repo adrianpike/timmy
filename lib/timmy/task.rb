@@ -49,11 +49,17 @@ module Timmy
 				temp_location = '/tmp/' + Time.current.to_i.to_s
 				output = File.new(temp_location, 'w')
 				t = ERB.new(File.new(@local).read, nil, '%') 
-				output.puts(t.result(nil))
+				output.puts(t.result(Timmish.new(server).b))
 				output.close
 				@local = temp_location
 			end
-			server.connection.scp.upload!(@local,@remote)
+			if @options[:sudo] then
+				# HACK ;_;
+				server.connection.scp.upload!(@local,temp_location)
+				server.execute("sudo mv #{temp_location} #{@remote}")
+			else
+				server.connection.scp.upload!(@local,@remote)
+			end
 			@result.ok!
 		end
 	end

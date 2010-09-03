@@ -1,8 +1,12 @@
 require '../lib/timmy'
 
 Timmy.role :database do
+	upload 'example.conf.erb', :remote => '/etc/example.conf', :erb => true, :sudo => true
 	package 'mysql-server'
-	upload 'example.conf.erb', :remote => 'example.conf', :erb => true	
+end
+
+Timmy.role :global do
+	command "wall 'lol'"
 end
 
 Timmy.server 'awesome.adrianpike.com' do
