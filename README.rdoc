@@ -23,6 +23,7 @@ Check out the 'example' directory to see an example architecture.
 
 == Quickstart yo!
 	gem install timmy
+
 	## example.rb
 	Timmy.role :database do
 		package 'mysql-server'
@@ -36,6 +37,8 @@ Check out the 'example' directory to see an example architecture.
 		arch :centos
 		role :database
 	end
+
+	adrian$ ruby example.rb
 
 === What you need
 * Knowledge of how to set up your server(s) the way you want. If you want to just preroll a bunch of packages together, this isn't for you. Sorry.
