@@ -1,11 +1,14 @@
 module Timmy
 
 	class Server
-		attr_accessor :exec_stack, :host, :user
+		attr_accessor :exec_stack, :host, :user, :raw_output
 		def initialize(n)
 			@host = n
 			@exec_stack = []
 			@roles = []
+			@silent = false
+			@arch = :centos
+			@raw_output = false
 		end
 		
 		def architecture; @arch; end
@@ -14,21 +17,25 @@ module Timmy
 		def roles(r); @roles += r; end
 		def role(r); @roles << r; end
 		def user(u); @user = u; end
+		def silent(s); @silent = s; end
+		def raw(s); @raw_output = s; end
 		
 		def is_role?(role); @roles.include?(role);	end
 	
 		def compile!
-			# build the execution stack based upon our roles and the kind of server we are
-			# this is mostly vestigal
-			if Timmy::roles[:global] then
-				@exec_stack += Timmy::roles[:global].exec_stack
-			end
+			unless @silent
+				# build the execution stack based upon our roles and the kind of server we are
+				# this is mostly vestigal
+				if Timmy::roles[:global] then
+					@exec_stack += Timmy::roles[:global].exec_stack
+				end
 			
-			@roles.each {|r|
-				Timmy::roles[r].exec_stack.each {|p|
-					@exec_stack << p
+				@roles.each {|r|
+					Timmy::roles[r].exec_stack.each {|p|
+						@exec_stack << p
+					}
 				}
-			}
+			end
 		end
 	
 		def connection
@@ -36,6 +43,8 @@ module Timmy
 				@connection ||= Net::SSH.start(@host, @user)
 			rescue SocketError
 				raise HostUnavailable, @host
+			rescue Net::SSH::AuthenticationFailed
+				raise AuthFailed, @host
 			end
 		end
 

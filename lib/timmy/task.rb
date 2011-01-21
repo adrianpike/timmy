@@ -38,15 +38,16 @@ module Timmy
 		def initialize(local, options)
 			@local = local
 			@options = options.extract_options!
-			@remote = @options[:remote] || local.dup
+			@remote = @options[:remote] || local.match(/^(.*\/)?(.*)$/)[2].dup
 			super()
 		end
 		def to_s
 			"Uploading #{@local} to #{@remote}"
 		end
 		def execute(server)
+			temp_location = '/tmp/' + Time.current.to_i.to_s
+      
 			if @options[:erb] then
-				temp_location = '/tmp/' + Time.current.to_i.to_s
 				output = File.new(temp_location, 'w')
 				t = ERB.new(File.new(@local).read, nil, '%') 
 				output.puts(t.result(Timmish.new(server).b))
@@ -75,6 +76,19 @@ module Timmy
 		def execute(server)
 			server.execute(@cmd, self)
 			@result.ok!
+		end
+	end
+	
+	class Capistrano < Task
+		def initialize(task, options)
+			@options = options.extract_options!
+			@task = task
+		end
+		def to_s
+			"Capistrano: #{@task}"
+		end
+		def execute(server)
+			`cd #{@options[:rails_root]} && cap #{@task} HOSTFILTER = #{server.host}`
 		end
 	end
 	

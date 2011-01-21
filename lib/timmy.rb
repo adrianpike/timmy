@@ -15,6 +15,7 @@ module Timmy
 	class UnsupportedArchitecture < Exception; end
 	class Panic < Exception; end
 	class HostUnavailable < Exception; end
+	class AuthFailed < Exception; end
 	
 	mattr_accessor :roles, :servers
 
@@ -25,7 +26,7 @@ module Timmy
 			else
 				h
 			end
-		}
+		}.compact
 	end
 
 	def self.role(name, &block)
@@ -35,6 +36,16 @@ module Timmy
 		self.roles[name] = r
 	end
 	def self.server(name, &block)
+		if name.is_a?(Array) then
+			name.each{|n|
+				new_server(n, block)
+			}
+		else
+			new_server(name, block)
+		end
+	end
+	
+	def self.new_server(name, block)
 		s = Server.new(name)
 		s.instance_eval(&block)
 		self.servers = {} unless self.servers
@@ -61,6 +72,7 @@ module Timmy
 						else
 							result = exec.execute(s)
 							printf result.status
+							puts result.raw_output if s.raw_output
 						end
 					rescue Panic
 						printf "[FAILED]"
@@ -69,6 +81,8 @@ module Timmy
 				}
 			rescue HostUnavailable
 				printf 'Host unavailable.' + "\n"
+			rescue AuthFailed
+				printf 'Authentication failed.' + "\n"
 			end
 		}
 	end
